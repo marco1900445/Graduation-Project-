@@ -1,8 +1,0 @@
-prefix=/home/marco/ros_2023/devel
-
-Name: navstack_pub
-Description: Description of navstack_pub
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 
