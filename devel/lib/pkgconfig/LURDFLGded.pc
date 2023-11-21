@@ -1,0 +1,8 @@
+prefix=/home/marco/ros_2023/devel
+
+Name: LURDFLGded
+Description: Description of LURDFLGded
+Version: 1.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
