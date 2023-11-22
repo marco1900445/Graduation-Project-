@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+
+
+<robot
+  name="LURDFLGded" xmlns:xacro="http://www.eos.org/wiki/xacro">
+  <xacro:include filename="$(find LURDFLGded)/urdf/LURDFLGded.gazebo"/> 
+<!--link name="base_footprint" />
+  <joint name="base_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+  </joint-->
+
+  <link
+    name="chassis">
+    <inertial>
+      <origin
+        xyz="0.00046120538022093 -0.0153335172566905 0.158906304765902"
+        rpy="0 0 0" />
+      <mass
+        value="4.33488930099209" />
+      <inertia
+        ixx="0.0490323359013021"
+        ixy="0.000138117214056931"
+        ixz="-0.0001587753774894"
+        iyy="0.054147420803515"
+        iyz="0.000619047454446421"
+        izz="0.0602418126312572" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://LURDFLGded/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://LURDFLGded/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="wheelLbot">
+    <inertial>
+      <origin
+        xyz="0.0301033654509815 0 5.20417042793042E-17"
+        rpy="0 0 0" />
+      <mass
+        value="0.341374882517028" />
+      <inertia
+        ixx="0.000307494300753466"
+        ixy="1.89763592430369E-21"
+        ixz="8.32044667171621E-20"
+        iyy="0.000257285131538352"
+        iyz="2.19316354091534E-20"
+        izz="0.000257285131538352" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://LURDFLGded/meshes/wheelLbot.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://LURDFLGded/meshes/wheelLbot.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left wheel bottom"
+    type="revolute">
+    <origin
+      xyz="-0.22746 -0.12 0.0285"
+      rpy="0 0 0" />
+    <parent
+      link="chassis" />
+    <child
+      link="wheelLbot" />
+    <axis
+      xyz="-1 0 0" />
+    <limit
+      lower="0"
+      upper="1"
+      effort="1"
+      velocity="1" />
+  </joint>
+  <link
+    name="WheelRbot">
+    <inertial>
+      <origin
+        xyz="-0.0301033654509815 -4.85722573273506E-17 -3.46944695195361E-18"
+        rpy="0 0 0" />
+      <mass
+        value="0.341374882517028" />
+      <inertia
+        ixx="0.000307494300753466"
+        ixy="7.91751685575152E-20"
+        ixz="-2.40257481487409E-21"
+        iyy="0.000257285131538352"
+        iyz="-1.82039705356076E-21"
+        izz="0.000257285131538352" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://LURDFLGded/meshes/WheelRbot.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://LURDFLGded/meshes/WheelRbot.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right wheel bottom"
+    type="revolute">
+    <origin
+      xyz="0.22746 -0.12 0.0285"
+      rpy="0 0 0" />
+    <parent
+      link="chassis" />
+    <child
+      link="WheelRbot" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="0"
+      upper="1"
+      effort="1"
+      velocity="1" />
+  </joint>
+  <link
+    name="wheelLtop">
+    <inertial>
+      <origin
+        xyz="0.0301033654509821 1.66533453693773E-16 -5.3776427755281E-16"
+        rpy="0 0 0" />
+      <mass
+        value="0.341374882517028" />
+      <inertia
+        ixx="0.000307494300753466"
+        ixy="-7.23030661146666E-21"
+        ixz="-8.86422056017286E-20"
+        iyy="0.000257285131538352"
+        iyz="-7.02011642261501E-21"
+        izz="0.000257285131538352" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://LURDFLGded/meshes/wheelLtop.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://LURDFLGded/meshes/wheelLtop.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+<link name="sensor_laser">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="1" />
+      <!-- RANDOM INERTIA BELOW -->
+      <inertia ixx="0.02" ixy="0" ixz="0" iyy="0.02" iyz="0" izz="0.02"/>
+    </inertial>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.05" length="0.1"/>
+      </geometry>
+      <material name="white" />
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.1"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint
+    name="left wheel top"
+    type="revolute">
+    <origin
+      xyz="-0.22746 0.12 0.0285"
+      rpy="0 0 0" />
+    <parent
+      link="chassis" />
+    <child
+      link="wheelLtop" />
+    <axis
+      xyz="-1 0 0" />
+    <limit
+      lower="0"
+      upper="1"
+      effort="1"
+      velocity="1" />
+  </joint>
+  <link
+    name="wheelRtop">
+    <inertial>
+      <origin
+        xyz="-0.0301033654509815 -5.55111512312578E-17 0"
+        rpy="0 0 0" />
+      <mass
+        value="0.341374882517028" />
+      <inertia
+        ixx="0.000307494300753466"
+        ixy="8.46642739148505E-20"
+        ixz="2.09640505019045E-21"
+        iyy="0.000257285131538352"
+        iyz="1.39265226528679E-21"
+        izz="0.000257285131538352" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://LURDFLGded/meshes/wheelRtop.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://LURDFLGded/meshes/wheelRtop.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right wheel top"
+    type="revolute">
+    <origin
+      xyz="0.22746 0.12 0.0285"
+      rpy="0 0 0" />
+    <parent
+      link="chassis" />
+    <child
+      link="wheelRtop" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="0"
+      upper="1"
+      effort="1"
+      velocity="1" />
+  </joint>
+
+  <joint name="joint_sensor_laser" type="fixed">
+    <origin xyz="0.15 0.05 0.3" rpy="0 0 0"/>
+    <parent link="chassis"/>
+    <child link="sensor_laser"/>
+  </joint>
+
+</robot>

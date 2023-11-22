@@ -1,0 +1,8 @@
+prefix=/home/marco/ros_2023/devel
+
+Name: elevator
+Description: Description of elevator
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

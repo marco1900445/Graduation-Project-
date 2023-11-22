@@ -1,0 +1,8 @@
+prefix=/home/marco/ros_2023/devel
+
+Name: full_assembly
+Description: Description of full_assembly
+Version: 1.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

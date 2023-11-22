@@ -1,0 +1,2 @@
+LURDFLGded:amcl:differential_drive:disinfection_goals:elevator:initial_pose_publisher:jetson_bot/localization_data_pub:jetson_bot/navstack_pub:map_server:mpu6050_esp_wifi:mpu6050_serial_to_imu:mpu_6050_driver:rosserial_esp32:rplidar_ros:serial:simple_navigation_goals
+-DCATKIN_DEVEL_PREFIX=/home/marco/ros_2023/devel -DCMAKE_INSTALL_PREFIX=/home/marco/ros_2023/install -G Unix Makefiles

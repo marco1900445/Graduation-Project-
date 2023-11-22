@@ -1,0 +1,8 @@
+prefix=/home/marco/ros_2023/install
+
+Name: disinfection_goals
+Description: Description of disinfection_goals
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

@@ -1,0 +1,8 @@
+prefix=/home/marco/ros_2023/devel
+
+Name: full_assembely
+Description: Description of full_assembely
+Version: 1.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
