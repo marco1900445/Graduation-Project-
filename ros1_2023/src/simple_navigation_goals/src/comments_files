@@ -1,0 +1,568 @@
+//ollllllllld
+/*
+#include <ros/ros.h>
+#include <std_msgs/Int8.h>
+#include <std_msgs/Bool.h>
+#include <move_base_msgs/MoveBaseAction.h>
+#include <actionlib/client/simple_action_client.h>
+#include <unistd.h>
+
+
+typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
+
+#define goal_lab 1
+#define goal_elev 2
+
+int request = 0;
+bool req_donatello_status = 0;
+
+void goal_elev_Callback(const std_msgs::Bool::ConstPtr& msg)
+{
+	if(msg->data)
+	{
+	MoveBaseClient ac("/move_base", true);
+	ROS_INFO("Sending Elevator Goal");
+	while(!ac.waitForServer(ros::Duration(5.0))){
+		ROS_INFO("Waiting for the move_base action server to come up");
+	}
+	move_base_msgs::MoveBaseGoal goal;
+	goal.target_pose.header.frame_id = "map";
+	goal.target_pose.header.stamp = ros::Time::now();
+	
+	goal.target_pose.pose.position.x = 11.4068216705;  
+	goal.target_pose.pose.position.y = 0.0105342166498;
+	goal.target_pose.pose.orientation.z = 0.688647175699; //-0.705284809338
+	goal.target_pose.pose.orientation.w = 0.708924070488;
+	ROS_INFO("Sending goalB1");
+	ac.sendGoal(goal);
+	
+	}
+}
+
+void goal_lab_Callback(const std_msgs::Bool::ConstPtr& msg)
+{
+	if(msg->data)
+	{
+	MoveBaseClient ac("/move_base", true);
+	ROS_INFO("Sending Elevator Goal");
+	while(!ac.waitForServer(ros::Duration(5.0))){
+		ROS_INFO("Waiting for the move_base action server to come up");
+	}
+	move_base_msgs::MoveBaseGoal goal;
+	goal.target_pose.header.frame_id = "map";
+	goal.target_pose.header.stamp = ros::Time::now();
+	goal.target_pose.pose.position.x =  1.0; 
+	goal.target_pose.pose.position.y = -18.515785217285156;
+	goal.target_pose.pose.orientation.z = 0.752250863692;
+	goal.target_pose.pose.orientation.w = 0.711000492124;
+	ROS_INFO("Sending goalA");
+	ac.sendGoal(goal);
+	}
+
+}
+
+
+
+int main(int argc, char** argv){
+
+	ros::init(argc, argv, "simple_navigation_goals");
+	
+        // MoveBaseClient ac("/move_base", true);
+        // ROS_INFO("First we are in state ", ac.getState());
+
+    //     while(!ac.waitForServer(ros::Duration(5.0))){
+	// 	ROS_INFO("Waiting for the move_base action server to come up");
+	// }
+
+    ros::NodeHandle n ;
+	ros::Subscriber sub1 = n.subscribe("goal_elev_request", 1000, goal_elev_Callback);
+	ros::Subscriber sub2 = n.subscribe("goal_lab_request", 1000, goal_lab_Callback);
+
+	// move_base_msgs::MoveBaseGoal goal;
+
+	// goal.target_pose.header.frame_id = "map";
+	// goal.target_pose.header.stamp = ros::Time::now();
+
+	// ros::Duration(20.0).sleep();
+	// goal.target_pose.pose.position.x =  1.4941892623901367; 
+	// goal.target_pose.pose.position.y = -18.515785217285156;
+	// goal.target_pose.pose.orientation.z = 0.752250863692;
+	// goal.target_pose.pose.orientation.w = 0.658876800376;
+	// ROS_INFO("Sending goalA");
+  	// ac.sendGoal(goal);
+	// if (request == goal_lab) {
+	// 	goal.target_pose.pose.position.x =  1.4941892623901367; 
+	// 	goal.target_pose.pose.position.y = -18.515785217285156;
+	// 	goal.target_pose.pose.orientation.z = 0.752250863692;
+	// 	goal.target_pose.pose.orientation.w = 0.658876800376;
+	// 	ROS_INFO("Sending goalA");
+	//   	ac.sendGoal(goal);
+	// }
+
+	// if (request == goal_elev) {
+	// 	goal.target_pose.pose.position.x = 10.22254467010498;
+	// 	goal.target_pose.pose.position.y = -1.047184944152832;
+	// 	goal.target_pose.pose.orientation.z = -0.764862650669;
+	// 	goal.target_pose.pose.orientation.w = 0.644193391469;
+	// 	ROS_INFO("Sending goalB");
+	//   	ac.sendGoal(goal);
+	// }
+
+
+  // ros::Publisher state = n.advertise<std_msgs::Int8>("goal", 1000);
+
+  //std_msgs::Int8 state_msg;
+	ROS_INFO("hello, I am running");
+  ros::spin();
+  return 0;
+}
+*/
+
+//lab to elev to second floor 
+/*#include <ros/ros.h>
+#include <std_msgs/Int8.h>
+#include <std_msgs/UInt8.h>
+#include <std_msgs/Bool.h>
+#include <std_msgs/String.h>
+#include <move_base_msgs/MoveBaseAction.h>
+#include <actionlib/client/simple_action_client.h>
+#include <unistd.h>
+#include <string>
+#include <nav_msgs/Odometry.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <fstream>
+#include <boost/filesystem.hpp>
+
+#include "ros/console.h"
+#include "map_server/image_loader.h"
+#include "nav_msgs/MapMetaData.h"
+#include "nav_msgs/LoadMap.h"
+#include "yaml-cpp/yaml.h"
+#include <geometry_msgs/PoseWithCovarianceStamped.h>
+
+#include <cstdlib>
+
+typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
+bool flag_angelo = 0;
+
+//Coordinates
+//Lab
+float lab_x = 1.4941892623901367;
+float lab_y = -18.515785217285156;
+float lab_z = 0.752250863692;
+float lab_w = 0.658876800376;
+
+//Elevator
+float elev_x = 10.22254467010498;
+float elev_y = -1.047184944152832;
+float elev_z = -0.764862650669;
+float elev_w = 0.644193391469;
+
+//Go to lab to take samples
+void goal_lab_Callback(const std_msgs::Bool::ConstPtr& msg)
+{
+	if(msg->data)
+	{
+	MoveBaseClient ac("/move_base", true);
+
+	//wait for the action server to come up
+	while (!ac.waitForServer(ros::Duration(5.0))) {
+		ROS_INFO("Waiting for the move_base action server to come up");
+	}
+
+	move_base_msgs::MoveBaseGoal goal;
+
+	//Move to the First Lab
+	goal.target_pose.header.frame_id = "map";
+	goal.target_pose.header.stamp = ros::Time::now();
+
+	goal.target_pose.pose.position.x = lab_x;
+	goal.target_pose.pose.position.y = lab_y;
+
+	goal.target_pose.pose.orientation.z = lab_z;
+	goal.target_pose.pose.orientation.w = lab_w;
+
+	ac.sendGoal(goal);
+	ROS_INFO("Now in state ", ac.getState());
+
+	/*while (ac.getState()!=actionlib::SimpleClientGoalState::SUCCEEDED)
+	{}
+
+	//Rasie the Flag to Assure that this Robot is now in the state of containing Blood Samples
+	flag_angelo = 1;
+	}
+}
+
+
+//Elevator Callback
+void goal_elev_Callback(const std_msgs::Bool::ConstPtr& msg)
+{	
+	//The Robot will not move to the Lab unless the Flag is raised which means it already contains samples.
+	if (msg->data && flag_angelo == 1)
+	{
+	MoveBaseClient ac("/move_base", true);
+
+
+	//wait for the action server to come up
+	while (!ac.waitForServer(ros::Duration(5.0))) {
+		ROS_INFO("Waiting for the move_base action server to come up");
+	}
+
+	//Creating a Handle for the Publisher to the Button Press Function
+	ros::NodeHandle n;
+	ros::Publisher elev_reached = n.advertise<std_msgs::Bool>("/elev_reached",1, 1000);
+	std_msgs::Bool msg1;
+     	msg1.data = true ; 
+
+	move_base_msgs::MoveBaseGoal goal;
+
+	//Move to the Elevator
+	goal.target_pose.header.frame_id = "map";
+	goal.target_pose.header.stamp = ros::Time::now();
+
+	goal.target_pose.pose.position.x = elev_x;
+	goal.target_pose.pose.position.y = elev_y;
+
+	goal.target_pose.pose.orientation.z = elev_z;
+	goal.target_pose.pose.orientation.w = elev_w;
+
+	ac.sendGoal(goal);
+	ROS_INFO("Now in state ", ac.getState());
+
+	//Get Stuck in this While loop and do not move to the next command of code unless you are done with the Navigation.
+	while (ac.getState()!=actionlib::SimpleClientGoalState::SUCCEEDED)
+	{}
+
+	//Publish for the Button Press Function that the Elevator is Reached
+   	elev_reached.publish(msg1);
+	}
+}
+
+//Change Map when Reaching the Second Floor
+void changemap_secondflooor(const std_msgs::Bool::ConstPtr& msg)
+{
+ 	ros::NodeHandle n;
+	ros::ServiceClient client = n.serviceClient<nav_msgs::LoadMap>("change_map");
+ 	nav_msgs::LoadMap srv;
+ 	srv.request.map_url= "/home/gradproject/ros1_2022_ws/src/jetson_bot/navstack_pub/maps/second_floor.yaml" ;//Secondfloor Map
+ 	client.call(srv);
+	
+	//Lower the Flag as the Robot reached and is now ready for a new task.
+ 	flag_angelo = 0;	
+}	
+
+//Main Functions Call Backs
+int main(int argc, char **argv)
+{
+
+    	ros::init(argc, argv, "simple_navigation_goals");
+    	ros::NodeHandle n;
+
+	ros::Subscriber sub1 = n.subscribe("goal_elev_request", 1000, goal_elev_Callback);
+	ros::Subscriber sub2 = n.subscribe("goal_lab_request", 1000, goal_lab_Callback);
+	ros::Subscriber second_floor = n.subscribe( "second_floor", 1000, changemap_secondflooor);
+	
+	ros::spin();
+	return 0;
+}
+*/
+/*
+#include <ros/ros.h>
+#include <std_msgs/Int8.h>
+#include <std_msgs/UInt8.h>
+#include <std_msgs/Bool.h>
+#include <std_msgs/String.h>
+#include <move_base_msgs/MoveBaseAction.h>
+#include <actionlib/client/simple_action_client.h>
+#include <unistd.h>
+#include <string>
+#include <nav_msgs/Odometry.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <fstream>
+#include <boost/filesystem.hpp>
+
+#include "ros/console.h"
+#include "map_server/image_loader.h"
+#include "nav_msgs/MapMetaData.h"
+#include "nav_msgs/LoadMap.h"
+#include "yaml-cpp/yaml.h"
+#include <geometry_msgs/PoseWithCovarianceStamped.h>
+
+#include <cstdlib>
+
+typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
+
+//Robots Variables
+//Donatello
+bool free_donatello = 0; //0 free, 1 not free
+bool flag_donatello = 0; 
+bool state_donatello = 1;
+float donatello_pose_x = 0.0;
+float donatello_pose_y = 0.0;
+float distance_donatello = 0.0;
+
+//Angelo
+bool free_angelo = 0; //0 free, 1 not free
+bool flag_angelo = 0;
+bool state_angelo = 0;
+float angelo_pose_x = 0.0;
+float angelo_pose_y = 0.0;
+float distance_angelo = 0.0;
+
+//Coordinates
+//Lab
+float lab_x = 1.4941892623901367;
+float lab_y = -18.515785217285156;
+float lab_z = 0.752250863692;
+float lab_w = 0.658876800376;
+
+//Elevator
+float elev_x = 10.22254467010498;
+float elev_y = -1.047184944152832;
+float elev_z = -0.764862650669;
+float elev_w = 0.644193391469;
+
+
+//All Callback Functions
+//Receving Position of Donatello 
+void donatello_pose_callback(const nav_msgs::Odometry::ConstPtr& msg)
+{
+	donatello_pose_x = msg->pose.pose.position.x;
+	donatello_pose_y = msg->pose.pose.position.y;
+	ROS_INFO("Donatello Pose Done");
+}
+
+//Receving Position of Angelo
+void angelo_pose_callback(const nav_msgs::Odometry::ConstPtr& msg)
+{
+	angelo_pose_x = msg->pose.pose.position.x;
+	angelo_pose_y = msg->pose.pose.position.y;
+	ROS_INFO("Angelo Pose Done");
+}
+
+//Move Functions
+//Move Donatello to Goal
+void move_donatello_to_goal(float x, float y, float z, float w)
+{
+	MoveBaseClient ac("/donatello/move_base", true);
+
+	ROS_INFO("First we are in state ", ac.getState());
+	ROS_INFO("Donatello Called");
+
+	//wait for the action server to come up
+	while (!ac.waitForServer(ros::Duration(5.0))) {
+		ROS_INFO("Waiting for the move_base action server to come up");
+	}
+
+	move_base_msgs::MoveBaseGoal goal;
+
+	free_donatello = 1;
+
+	//Move to the First Lab
+	goal.target_pose.header.frame_id = "map";
+	goal.target_pose.header.stamp = ros::Time::now();
+
+	goal.target_pose.pose.position.x = x;
+	goal.target_pose.pose.position.y = y;
+
+	goal.target_pose.pose.orientation.z = z;
+	goal.target_pose.pose.orientation.w = w;
+
+	ac.sendGoal(goal);
+	
+	while (ac.getState()!=actionlib::SimpleClientGoalState::SUCCEEDED)
+	{ }
+	free_donatello = 0;
+}
+
+//Move Angelo to Goal
+void move_angelo_to_goal(float x, float y, float z, float w)
+{
+	MoveBaseClient ac("/move_base", true);
+
+	ROS_INFO("First we are in state ", ac.getState());
+	ROS_INFO("Angelo Called");
+
+	//wait for the action server to come up
+	while (!ac.waitForServer(ros::Duration(5.0))) {
+		ROS_INFO("Waiting for the move_base action server to come up");
+	}
+
+	move_base_msgs::MoveBaseGoal goal;
+
+	free_angelo = 1;
+
+	//Move to the First Lab
+	goal.target_pose.header.frame_id = "map";
+	goal.target_pose.header.stamp = ros::Time::now();
+
+	goal.target_pose.pose.position.x = x;
+	goal.target_pose.pose.position.y = y;
+
+	goal.target_pose.pose.orientation.z = z;
+	goal.target_pose.pose.orientation.w = w;
+
+	ac.sendGoal(goal);
+	ROS_INFO("Now in state ", ac.getState());
+
+	while (ac.getState()!=actionlib::SimpleClientGoalState::SUCCEEDED)
+	{}
+	free_donatello = 0;
+	
+}
+
+
+//Lab Callbak
+void goal_lab_Callback(const std_msgs::Bool::ConstPtr& msg)
+{
+	if(msg->data)
+	{
+		ROS_INFO("Sending Lab Goal");
+		move_donatello_to_goal(lab_x, lab_y, lab_z, lab_w);
+			
+	}
+}
+
+
+
+int main(int argc, char **argv)
+{
+
+    ros::init(argc, argv, "simple_navigation_goals");
+    ros::NodeHandle n;
+
+	ros::Subscriber sub2 = n.subscribe("goal_lab_request", 1000, goal_lab_Callback);
+	ros::Subscriber sub3 = n.subscribe("donatello/odom_data_quat", 1000, donatello_pose_callback);
+	ros::Subscriber sub4 = n.subscribe("odom_data_quat", 1000, angelo_pose_callback);
+	
+	//Create an object of class SubscribeAndPublish that will take care of everythingx`
+	ROS_INFO("hello, I am running");
+
+	ros::spin();
+	return 0;
+}*/
+/*
+#include <ros/ros.h>
+#include <std_msgs/Int8.h>
+#include <std_msgs/Bool.h>
+#include <move_base_msgs/MoveBaseAction.h>
+#include <actionlib/client/simple_action_client.h>
+#include <unistd.h>
+
+
+typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
+
+#define goal_lab 1
+#define goal_elev 2
+
+int request = 0;
+bool req_donatello_status = 0;
+
+void goal_elev_Callback(const std_msgs::Bool::ConstPtr& msg)
+{
+	if(msg->data)
+	{
+	MoveBaseClient ac("/move_base", true);
+	ROS_INFO("Sending Elevator Goal");
+	while(!ac.waitForServer(ros::Duration(5.0))){
+		ROS_INFO("Waiting for the move_base action server to come up");
+	}
+	move_base_msgs::MoveBaseGoal goal;
+	goal.target_pose.header.frame_id = "map";
+	goal.target_pose.header.stamp = ros::Time::now();
+	
+	goal.target_pose.pose.position.x = 11.4068216705;  
+	goal.target_pose.pose.position.y = 0.0105342166498;
+	goal.target_pose.pose.orientation.z = 0.688647175699; //-0.705284809338
+	goal.target_pose.pose.orientation.w = 0.708924070488;
+	ROS_INFO("Sending goalB1");
+	ac.sendGoal(goal);
+	
+	}
+}
+
+void goal_lab_Callback(const std_msgs::Bool::ConstPtr& msg)
+{
+	if(msg->data)
+	{
+	MoveBaseClient ac("/move_base", true);
+	ROS_INFO("Sending Elevator Goal");
+	while(!ac.waitForServer(ros::Duration(5.0))){
+		ROS_INFO("Waiting for the move_base action server to come up");
+	}
+	move_base_msgs::MoveBaseGoal goal;
+	goal.target_pose.header.frame_id = "map";
+	goal.target_pose.header.stamp = ros::Time::now();
+	goal.target_pose.pose.position.x =  1.4941892623901367; 
+	goal.target_pose.pose.position.y = -18.515785217285156;
+	goal.target_pose.pose.orientation.z = 0.752250863692;
+	goal.target_pose.pose.orientation.w = 0.711000492124;
+	ROS_INFO("Sending goalA");
+	ac.sendGoal(goal);
+	}
+
+}
+
+
+
+int main(int argc, char** argv){
+
+	ros::init(argc, argv, "simple_navigation_goals");
+	
+        // MoveBaseClient ac("/move_base", true);
+        // ROS_INFO("First we are in state ", ac.getState());
+
+    //     while(!ac.waitForServer(ros::Duration(5.0))){
+	// 	ROS_INFO("Waiting for the move_base action server to come up");
+	// }
+
+    ros::NodeHandle n ;
+	ros::Subscriber sub1 = n.subscribe("goal_elev_request", 1000, goal_elev_Callback);
+	ros::Subscriber sub2 = n.subscribe("goal_lab_request", 1000, goal_lab_Callback);
+
+	// move_base_msgs::MoveBaseGoal goal;
+
+	// goal.target_pose.header.frame_id = "map";
+	// goal.target_pose.header.stamp = ros::Time::now();
+
+	// ros::Duration(20.0).sleep();
+	// goal.target_pose.pose.position.x =  1.4941892623901367; 
+	// goal.target_pose.pose.position.y = -18.515785217285156;
+	// goal.target_pose.pose.orientation.z = 0.752250863692;
+	// goal.target_pose.pose.orientation.w = 0.658876800376;
+	// ROS_INFO("Sending goalA");
+  	// ac.sendGoal(goal);
+	// if (request == goal_lab) {
+	// 	goal.target_pose.pose.position.x =  1.4941892623901367; 
+	// 	goal.target_pose.pose.position.y = -18.515785217285156;
+	// 	goal.target_pose.pose.orientation.z = 0.752250863692;
+	// 	goal.target_pose.pose.orientation.w = 0.658876800376;
+	// 	ROS_INFO("Sending goalA");
+	//   	ac.sendGoal(goal);
+	// }
+
+	// if (request == goal_elev) {
+	// 	goal.target_pose.pose.position.x = 10.22254467010498;
+	// 	goal.target_pose.pose.position.y = -1.047184944152832;
+	// 	goal.target_pose.pose.orientation.z = -0.764862650669;
+	// 	goal.target_pose.pose.orientation.w = 0.644193391469;
+	// 	ROS_INFO("Sending goalB");
+	//   	ac.sendGoal(goal);
+	// }
+
+
+  // ros::Publisher state = n.advertise<std_msgs::Int8>("goal", 1000);
+
+  //std_msgs::Int8 state_msg;
+	ROS_INFO("hello, I am running");
+  ros::spin();
+  return 0;
+}
+*/
+
+//mutiagent with flags
+

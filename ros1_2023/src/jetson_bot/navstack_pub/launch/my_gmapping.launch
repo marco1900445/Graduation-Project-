@@ -1,0 +1,118 @@
+<launch> 
+
+<!-- Transformation Configuration ... Setting Up the Relationships Between Coordinate Frames --> 
+  <node pkg="tf" type="static_transform_publisher" name="base_link_to_laser" args="-0.15 0.05 0.3 0 0 0 base_link laser 10" />
+  <node pkg="tf" type="static_transform_publisher" name="imu_broadcaster" args="0.06 0.0 0.02 0 0 0 base_link imu_link 10" />
+  <node pkg="tf" type="static_transform_publisher" name="base_link_broadcaster" args="0 0 0.09 0 0 0 base_footprint base_link 10" />
+
+
+<!-- Extended Kalman Filter from robot_pose_ekf Node-->
+  <!-- Subscribe: /odom, /imu_data, /vo -->
+  <!-- Publish: /robot_pose_ekf/odom_combined -->
+  <remap from="odom" to="odom_data_quat" />
+  <!--remap from="odom" to="odom" /-->
+  <remap from="imu_data" to="imu/data" />
+  <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf">
+    <param name="output_frame" value="odom"/>
+    <param name="base_footprint_frame" value="base_footprint"/>
+    <param name="freq" value="30.0"/>
+    <param name="sensor_timeout" value="1.0"/>
+    <param name="odom_used" value="true"/>
+    <param name="imu_used" value="true"/>
+    <param name="vo_used" value="false"/>
+    <param name="gps_used" value="false"/>
+    <param name="debug" value="false"/>
+    <param name="self_diagnose" value="false"/>
+  </node>
+
+
+
+ 
+	 <node pkg="mpu6050_serial_to_imu" type="mpu6050_serial_to_imu_node" name="mpu6050_serial_to_imu_node" required="true">
+    <param name="port" value="/dev/ttyACM0"/>
+		<param name="tf_parent_frame_id" value="base_link"/>
+		<param name="tf_frame_id" value="imu_link"/>
+		<param name="frame_id" value="imu_link"/>
+		<param name="broadcast_tf" value="false"/>
+		<param name="linear_acceleration_stddev" value="2.5e-05"/>
+		<param name="angular_velocity_stddev" value="2.5e-05"/>
+		<param name="orientation_stddev" value="0.0"/>
+  </node>
+
+
+ <node pkg="mpu6050_esp_wifi" type="mpu6050_node" name="mpu6050_node" required="true">
+	<param name="tf_parent_frame_id" value="base_link"/>
+	<param name="tf_frame_id" value="imu_link"/>
+	<param name="frame_id" value="imu_link"/>
+	<param name="broadcast_tf" value="false"/>
+    	<param name="linear_acceleration_stddev" value="2.5e-05"/>
+    	<param name="angular_velocity_stddev" value="2.5e-05"/>
+ </node>
+
+ <node pkg="rosserial_python" type="serial_node.py" name="serial_node_2">
+    <param name="port" value="tcp"/>
+    <param name="baud" value="57600"/>
+ </node>
+
+
+
+  <arg name="scan_topic" default="scan" /> 
+ 
+<!-- Defining parameters for slam_gmapping node --> 
+ 
+  <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen"> 
+    <param name="base_frame" value="base_footprint"/> 
+    <param name="odom_frame" value="odom"/> 
+    <param name="map_update_interval" value="5.0"/> 
+    <param name="maxUrange" value="6.0"/> 
+    <param name="maxRange" value="8.0"/> 
+    <param name="sigma" value="0.05"/> 
+    <param name="kernelSize" value="1"/> 
+    <param name="lstep" value="0.05"/> 
+    <param name="astep" value="0.05"/> 
+    <param name="iterations" value="5"/> 
+    <param name="lsigma" value="0.075"/> 
+    <param name="ogain" value="3.0"/> 
+    <param name="lskip" value="0"/> 
+    <param name="minimumScore" value="100"/> 
+    <param name="srr" value="0.01"/> 
+    <param name="srt" value="0.02"/> 
+    <param name="str" value="0.01"/> 
+    <param name="stt" value="0.02"/> 
+    <param name="linearUpdate" value="0.5"/> 
+    <param name="angularUpdate" value="0.436"/> 
+    <param name="temporalUpdate" value="-1.0"/> 
+    <param name="resampleThreshold" value="0.5"/> 
+    <param name="particles" value="80"/> 
+  
+    <param name="xmin" value="-1.0"/> 
+    <param name="ymin" value="-1.0"/> 
+    <param name="xmax" value="1.0"/> 
+    <param name="ymax" value="1.0"/> 
+ 
+    <param name="delta" value="0.05"/> 
+    <param name="llsamplerange" value="0.01"/> 
+    <param name="llsamplestep" value="0.01"/> 
+    <param name="lasamplerange" value="0.005"/> 
+    <param name="lasamplestep" value="0.005"/> 
+    <remap from="scan" to="$(arg scan_topic)"/> 
+  </node> 
+ 
+<!-- Defining parameters for move_base node --> 
+ 
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <rosparam file="$(find navstack_pub)/param/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find navstack_pub)/param/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find navstack_pub)/param/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find navstack_pub)/param/global_costmap_params.yaml" command="load" />
+		<!--rosparam file="$(find navstack_pub)/param/base_local_planner_params.yaml" command="load" /-->
+		<rosparam file="$(find navstack_pub)/param/dwa_local_planner_params.yaml" command="load" />
+
+    <rosparam file="$(find navstack_pub)/param/global_planner.yaml" command="load" />
+    <rosparam file="$(find navstack_pub)/param/move_base_params.yaml" command="load" />
+    <!--rosparam file="$(find navstack_pub)/param/lidar_filter_params.yaml" command="load" /-->
+
+  </node>
+
+
+</launch> 

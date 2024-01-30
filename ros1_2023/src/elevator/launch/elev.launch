@@ -1,0 +1,4 @@
+<launch>
+	<node pkg="elevator" type="elevator.py" name ="move_elev" output= "screen">
+	</node>
+</launch>
